@@ -7,7 +7,6 @@ services:
     name: nutriguide-backend
     env: node
     region: oregon
-    plan: free
     buildCommand: cd backend && npm install
     startCommand: cd backend && npm start
     envVars:
@@ -36,7 +35,6 @@ services:
     name: nutriguide-ml-service
     env: python
     region: oregon
-    plan: free
     buildCommand: cd ml-service && pip install -r requirements.txt
     startCommand: cd ml-service && python app.py
     envVars:
@@ -49,10 +47,8 @@ services:
     healthCheckPath: /health
 
   # Frontend Static Site
-  - type: web
+  - type: static
     name: nutriguide-frontend
-    env: static
-    plan: free
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: frontend/dist
     envVars:
