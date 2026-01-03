@@ -23,12 +23,12 @@ services:
         fromService:
           type: web
           name: nutriguide-ml-service
-          property: url
+          property: host
       - key: FRONTEND_URL
         fromService:
           type: web
           name: nutriguide-frontend
-          property: url
+          property: host
     healthCheckPath: /api/health
 
   # ML Service
@@ -60,7 +60,7 @@ services:
         fromService:
           type: web
           name: nutriguide-backend
-          property: url
+          property: host
     routes:
       - type: rewrite
         source: /*

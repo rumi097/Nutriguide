@@ -30,6 +30,13 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5002;
 
+const normalizeUrl = (value) => {
+  if (!value) return null;
+  const trimmed = String(value).trim().replace(/\/+$/, '');
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed;
+  return `https://${trimmed}`;
+};
+
 // ======================
 // Middleware Configuration
 // ======================
@@ -39,7 +46,7 @@ app.use(helmet());
 
 // CORS configuration - allow frontend to communicate with backend
 const allowedOrigins = [
-  process.env.FRONTEND_URL,
+  normalizeUrl(process.env.FRONTEND_URL),
   'http://localhost:5173',
   'http://localhost:3000'
 ].filter(Boolean);

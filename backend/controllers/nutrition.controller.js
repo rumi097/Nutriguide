@@ -8,6 +8,13 @@ import User from '../models/User.model.js';
 import Meal from '../models/Meal.model.js';
 import axios from 'axios';
 
+const normalizeUrl = (value) => {
+  if (!value) return null;
+  const trimmed = String(value).trim().replace(/\/+$/, '');
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed;
+  return `https://${trimmed}`;
+};
+
 /**
  * @route   GET /api/nutrition/recommendations
  * @desc    Get personalized nutrition recommendations
@@ -25,7 +32,10 @@ export const getRecommendations = asyncHandler(async (req, res) => {
   
   // Get recommendations from ML service
   try {
-    const mlResponse = await axios.post(`${process.env.ML_SERVICE_URL}/predict`, {
+    const mlBaseUrl = normalizeUrl(process.env.ML_SERVICE_URL);
+    if (!mlBaseUrl) throw new Error('ML_SERVICE_URL is not configured');
+
+    const mlResponse = await axios.post(`${mlBaseUrl}/predict`, {
       age: user.age,
       gender: user.gender,
       height: user.height,
@@ -134,7 +144,10 @@ export const calculateNutrition = asyncHandler(async (req, res) => {
   const { age, gender, height, weight, activityLevel, fitnessGoal } = req.query;
   
   try {
-    const mlResponse = await axios.post(`${process.env.ML_SERVICE_URL}/predict`, {
+    const mlBaseUrl = normalizeUrl(process.env.ML_SERVICE_URL);
+    if (!mlBaseUrl) throw new Error('ML_SERVICE_URL is not configured');
+
+    const mlResponse = await axios.post(`${mlBaseUrl}/predict`, {
       age: parseInt(age),
       gender,
       height: parseFloat(height),
