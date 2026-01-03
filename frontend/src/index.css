@@ -1,0 +1,289 @@
+/**
+ * Global Styles
+ * Tailwind CSS imports and custom global styles with modern animations
+ */
+
+/* postcss-disable-next-line */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900 antialiased;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Better font rendering */
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  /* Custom scrollbar styles */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-gray-100 rounded-lg;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-lg hover:bg-gray-400 transition-colors;
+  }
+  
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-600 via-purple-600 to-secondary-600 bg-clip-text text-transparent;
+    animation: gradient 8s ease infinite;
+    background-size: 200% 200%;
+  }
+
+  /* Animated gradient surface (reuses existing `gradient` keyframes) */
+  .animated-gradient {
+    background-size: 200% 200%;
+    animation: gradient 12s ease infinite;
+  }
+
+  /* Subtle animated line (e.g., header accent) */
+  .animated-gradient-fast {
+    background-size: 200% 200%;
+    animation: gradient 6s ease infinite;
+  }
+
+  @keyframes gradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  
+  /* Glass morphism effect */
+  .glass {
+    @apply bg-white/80 backdrop-blur-lg border border-white/20 shadow-lg;
+  }
+  
+  /* Enhanced card hover effect */
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02];
+  }
+
+  /* Shimmer effect */
+  .shimmer {
+    @apply relative overflow-hidden;
+  }
+
+  .shimmer::before {
+    content: '';
+    @apply absolute top-0 left-0 w-full h-full;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  /* Floating animation */
+  .float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* Pulse animation */
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(99, 102, 241, 0.8);
+    }
+  }
+
+  /* Smooth slide in from bottom */
+  .slide-in-bottom {
+    animation: slideInBottom 0.5s ease-out;
+  }
+
+  @keyframes slideInBottom {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Button with ripple effect */
+  .btn-primary {
+    @apply relative px-6 py-3 bg-gradient-to-r from-primary-600 to-purple-600 text-white rounded-lg font-semibold shadow-lg overflow-hidden;
+    @apply hover:shadow-2xl hover:scale-105 active:scale-95;
+    @apply transition-all duration-300;
+  }
+
+  .btn-primary::before {
+    content: '';
+    @apply absolute inset-0 bg-white opacity-0;
+    transition: opacity 0.3s;
+  }
+
+  .btn-primary:hover::before {
+    @apply opacity-20;
+  }
+
+  /* Secondary button style */
+  .btn-secondary {
+    @apply relative px-6 py-3 bg-white text-gray-700 border-2 border-gray-300 rounded-lg font-semibold;
+    @apply hover:bg-gray-50 hover:border-gray-400 active:scale-95;
+    @apply transition-all duration-300 shadow-sm hover:shadow-md;
+  }
+
+  /* Smooth transitions for all interactive elements */
+  button, a, input, select, textarea {
+    @apply transition-all duration-200;
+  }
+
+  /* Focus styles */
+  input:focus, textarea:focus, select:focus {
+    @apply ring-2 ring-primary-500 ring-offset-2 outline-none;
+  }
+
+  /* Loading spinner */
+  .spinner {
+    @apply inline-block w-8 h-8 border-4 border-gray-200 border-t-primary-600 rounded-full;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Skeleton loading */
+  .skeleton {
+    @apply bg-gray-200 rounded;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+  }
+
+  @keyframes skeleton-loading {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  /* Badge styles */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  .badge-success {
+    @apply bg-green-100 text-green-800;
+  }
+
+  .badge-warning {
+    @apply bg-yellow-100 text-yellow-800;
+  }
+
+  .badge-error {
+    @apply bg-red-100 text-red-800;
+  }
+
+  .badge-info {
+    @apply bg-blue-100 text-blue-800;
+  }
+
+  /* Enhanced shadow on scroll */
+  .shadow-on-scroll {
+    @apply transition-shadow duration-300;
+  }
+
+  /* Responsive grid auto-fit */
+  .grid-auto-fit {
+    @apply grid gap-6;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  /* Smooth image loading */
+  img {
+    @apply transition-opacity duration-300;
+  }
+
+  img[loading="lazy"] {
+    @apply opacity-0;
+  }
+
+  img.loaded {
+    @apply opacity-100;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-gradient,
+  .animated-gradient-fast,
+  .gradient-text {
+    animation: none !important;
+  }
+}
+
+@layer utilities {
+  /* Text gradient utilities */
+  .text-gradient-primary {
+    @apply bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-secondary {
+    @apply bg-gradient-to-r from-secondary-600 to-pink-600 bg-clip-text text-transparent;
+  }
+
+  /* Background gradient utilities */
+  .bg-gradient-primary {
+    @apply bg-gradient-to-br from-primary-50 via-purple-50 to-secondary-50;
+  }
+
+  .bg-gradient-dark {
+    @apply bg-gradient-to-br from-gray-900 via-gray-800 to-black;
+  }
+
+  /* Modern container */
+  .container-responsive {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+  }
+
+  /* Aspect ratio utilities */
+  .aspect-square {
+    aspect-ratio: 1 / 1;
+  }
+
+  .aspect-video {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* Mobile-first responsive breakpoints */
+@media (max-width: 640px) {
+  .gradient-text {
+    background-size: 100% 100%;
+  }
+  
+  h1 {
+    @apply text-3xl;
+  }
+  
+  h2 {
+    @apply text-2xl;
+  }
+}

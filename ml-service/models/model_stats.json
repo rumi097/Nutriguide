@@ -1,0 +1,26 @@
+{
+  "best_model": "Gradient Boosting",
+  "feature_columns": [
+    "age",
+    "gender",
+    "height",
+    "weight",
+    "bmi",
+    "bmr",
+    "activity_level",
+    "fitness_goal",
+    "bmi_age",
+    "weight_height_ratio",
+    "bmr_activity",
+    "age_squared",
+    "bmi_squared",
+    "activity_goal"
+  ],
+  "test_mae": 5.615861520621187,
+  "test_rmse": 19.117581527651524,
+  "test_r2": 0.9987317616279445,
+  "cv_mae": 6.418781925237575,
+  "train_samples": 4000,
+  "test_samples": 1000,
+  "total_features": 14
+}

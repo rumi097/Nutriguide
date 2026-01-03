@@ -1,0 +1,71 @@
+# Render Blueprint for NutriGuide AI
+# This file defines all services for your application
+
+services:
+  # Backend API Service
+  - type: web
+    name: nutriguide-backend
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5002
+      - key: MONGODB_URI
+        sync: false  # Set this manually in Render dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRE
+        value: 7d
+      - key: ML_SERVICE_URL
+        fromService:
+          type: web
+          name: nutriguide-ml-service
+          property: host
+      - key: FRONTEND_URL
+        fromService:
+          type: web
+          name: nutriguide-frontend
+          property: host
+    healthCheckPath: /api/health
+
+  # ML Service
+  - type: web
+    name: nutriguide-ml-service
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: cd ml-service && pip install -r requirements.txt
+    startCommand: cd ml-service && python app.py
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: PORT
+        value: 5001
+      - key: MODEL_PATH
+        value: models/nutrition_model.pkl
+      - key: SCALER_PATH
+        value: models/scaler.pkl
+
+  # Frontend Static Site
+  - type: web
+    name: nutriguide-frontend
+    env: static
+    region: oregon
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: nutriguide-backend
+          property: host
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+models/*.pkl
+data/*.csv
+!data/sample_data.csv
+*.log
+.env
+.DS_Store

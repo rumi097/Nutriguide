@@ -1,0 +1,31 @@
+{
+  "total_meals": 500,
+  "categories": {
+    "dinner": 151,
+    "lunch": 124,
+    "breakfast": 115,
+    "snack": 59,
+    "dessert": 51
+  },
+  "cuisines": {
+    "american": 443,
+    "mexican": 15,
+    "italian": 12,
+    "french": 8,
+    "indian": 6
+  },
+  "avg_calories": 357.4366,
+  "feature_dimensions": {
+    "tfidf": 100,
+    "nutrition": 8,
+    "dietary": 8,
+    "allergens": 7,
+    "combined": 123
+  },
+  "similarity_stats": {
+    "mean": 0.05267769802249641,
+    "std": 0.4349293505613715,
+    "min_non_self": -0.8808569874050045,
+    "max_non_self": 0.9892059443744555
+  }
+}
