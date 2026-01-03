@@ -86,7 +86,6 @@ git push -u origin main
    - Environment Variables:
      ```
      NODE_ENV=production
-     PORT=5002
      MONGODB_URI=your_mongodb_atlas_connection_string
      JWT_SECRET=your_secure_random_string
      JWT_EXPIRE=7d
@@ -107,7 +106,6 @@ git push -u origin main
    - Environment Variables:
      ```
      FLASK_ENV=production
-     PORT=5001
      MODEL_PATH=models/nutrition_model.pkl
      SCALER_PATH=models/scaler.pkl
      ```
@@ -145,6 +143,8 @@ After all services are deployed:
      ML_SERVICE_URL=https://nutriguide-ml-service.onrender.com
      ```
    - Click "Save Changes" (will trigger redeploy)
+
+> Note: If you deployed via Blueprint (`render.yaml`), these URLs are wired automatically using `fromService.property: url`. You typically only need to set `MONGODB_URI`.
 
 3. **Update ML Service Environment Variables**
    - Go to ML Service → Environment

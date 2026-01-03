@@ -646,7 +646,7 @@ def internal_error(error):
 # ======================
 
 if __name__ == '__main__':
+    debug = (os.getenv('FLASK_ENV') != 'production')
     print(f"🚀 Starting NutriGuide ML Service on port {PORT}")
-    app.run(host='0.0.0.0', port=PORT, debug=(os.getenv('FLASK_ENV') != 'production'))
     print(f"📊 Model Status: {'Loaded' if MODEL_LOADED else 'Using Fallback Calculation'}")
-    app.run(host='0.0.0.0', port=PORT, debug=True)
+    app.run(host='0.0.0.0', port=PORT, debug=debug)

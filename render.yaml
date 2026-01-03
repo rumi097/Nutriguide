@@ -13,8 +13,6 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 5002
       - key: MONGODB_URI
         sync: false  # Set this manually in Render dashboard
       - key: JWT_SECRET
@@ -25,12 +23,12 @@ services:
         fromService:
           type: web
           name: nutriguide-ml-service
-          property: host
+          property: url
       - key: FRONTEND_URL
         fromService:
           type: web
           name: nutriguide-frontend
-          property: host
+          property: url
     healthCheckPath: /api/health
 
   # ML Service
@@ -44,18 +42,16 @@ services:
     envVars:
       - key: FLASK_ENV
         value: production
-      - key: PORT
-        value: 5001
       - key: MODEL_PATH
         value: models/nutrition_model.pkl
       - key: SCALER_PATH
         value: models/scaler.pkl
+    healthCheckPath: /health
 
   # Frontend Static Site
   - type: web
     name: nutriguide-frontend
     env: static
-    region: oregon
     plan: free
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: frontend/dist
@@ -64,7 +60,7 @@ services:
         fromService:
           type: web
           name: nutriguide-backend
-          property: host
+          property: url
     routes:
       - type: rewrite
         source: /*
