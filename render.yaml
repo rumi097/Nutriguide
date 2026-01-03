@@ -47,8 +47,9 @@ services:
     healthCheckPath: /health
 
   # Frontend Static Site
-  - type: static
+  - type: web
     name: nutriguide-frontend
+    env: static
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: frontend/dist
     envVars:
