@@ -1,0 +1,96 @@
+name: Review Required
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  check-approvals:
+    name: Check Required Approvals
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    
+    steps:
+      - name: Check for required approvals
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: reviews } = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+            
+            // Count approvals
+            const approvals = reviews.filter(review => 
+              review.state === 'APPROVED'
+            ).length;
+            
+            const requiredApprovals = 1; // Change this based on your needs
+            
+            if (approvals < requiredApprovals) {
+              core.setFailed(`This PR requires ${requiredApprovals} approval(s). Currently has ${approvals}.`);
+            } else {
+              console.log(`✅ PR has ${approvals} approval(s). Ready to merge!`);
+            }
+      
+      - name: Check for changes requested
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: reviews } = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+            
+            // Check for changes requested
+            const changesRequested = reviews.filter(review => 
+              review.state === 'CHANGES_REQUESTED'
+            );
+            
+            if (changesRequested.length > 0) {
+              core.setFailed('Changes have been requested on this PR. Please address the feedback.');
+            }
+      
+      - name: Comment on PR status
+        uses: actions/github-script@v6
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        with:
+          script: |
+            const message = `
+            ## 👋 Welcome!
+            
+            Thank you for your contribution to NutriGuide AI!
+            
+            ### 📋 Before this PR can be merged:
+            
+            - [ ] All CI checks must pass ✅
+            - [ ] At least 1 approval from maintainers
+            - [ ] All conversations must be resolved
+            - [ ] Branch must be up to date with main
+            
+            ### 👥 Review Process
+            
+            1. A maintainer will review your code
+            2. They may request changes or approve
+            3. Make any requested changes
+            4. Once approved and tests pass, we'll merge!
+            
+            ### 📚 Resources
+            
+            - [Contributing Guidelines](../blob/main/CONTRIBUTING.md)
+            - [Code of Conduct](../blob/main/CODE_OF_CONDUCT.md)
+            - [First Time Contributors Guide](../blob/main/FIRST_TIME_CONTRIBUTORS.md)
+            
+            Thank you again for contributing! 🎉
+            `;
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: message
+            });

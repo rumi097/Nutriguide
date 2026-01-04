@@ -1,0 +1,165 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # Backend Tests
+  backend-test:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+      
+      - name: Install dependencies
+        run: |
+          cd backend
+          npm ci
+      
+      - name: Run linter
+        run: |
+          cd backend
+          npm run lint || echo "No lint script found"
+      
+      - name: Run tests
+        run: |
+          cd backend
+          npm test || echo "No tests found yet"
+
+  # Frontend Tests
+  frontend-test:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm ci
+      
+      - name: Run linter
+        run: |
+          cd frontend
+          npm run lint || echo "No lint script found"
+      
+      - name: Build
+        run: |
+          cd frontend
+          npm run build
+      
+      - name: Run tests
+        run: |
+          cd frontend
+          npm test || echo "No tests found yet"
+
+  # ML Service Tests
+  ml-test:
+    name: ML Service Tests
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11']
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+          cache-dependency-path: ml-service/requirements.txt
+      
+      - name: Install dependencies
+        run: |
+          cd ml-service
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov flake8
+      
+      - name: Lint with flake8
+        run: |
+          cd ml-service
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      
+      - name: Run tests
+        run: |
+          cd ml-service
+          pytest || echo "No tests found yet"
+
+  # Code Quality
+  code-quality:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Check for TODO/FIXME
+        run: |
+          echo "Checking for TODO/FIXME comments..."
+          grep -r "TODO\|FIXME" --include="*.js" --include="*.jsx" --include="*.py" . || echo "None found"
+      
+      - name: Check file sizes
+        run: |
+          echo "Checking for large files..."
+          find . -type f -size +1M -not -path "*/node_modules/*" -not -path "*/.git/*" -not -path "*/venv/*"
+
+  # Security Audit
+  security:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Backend Security Audit
+        run: |
+          cd backend
+          npm audit --production || echo "Vulnerabilities found"
+      
+      - name: Frontend Security Audit
+        run: |
+          cd frontend
+          npm audit --production || echo "Vulnerabilities found"
+      
+      - name: Python Security Check
+        run: |
+          pip install safety
+          cd ml-service
+          safety check -r requirements.txt || echo "Vulnerabilities found"

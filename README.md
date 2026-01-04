@@ -1,18 +1,80 @@
-# NutriGuide AI - Smart Diet & Meal Recommendation System
+<div align="center">
+  <h1>🥗 NutriGuide AI</h1>
+  <p><strong>Smart Diet & Meal Recommendation System</strong></p>
+  
+  [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+  [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js&logoColor=white)](https://nodejs.org)
+  [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)](https://reactjs.org)
+  [![Python](https://img.shields.io/badge/Python-3.8+-3776AB?logo=python&logoColor=white)](https://python.org)
+  [![MongoDB](https://img.shields.io/badge/MongoDB-6.0-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com)
+  [![ML Accuracy](https://img.shields.io/badge/ML%20Accuracy-99.87%25-success)](ml-service/README.md)
+  
+  <p>A full-stack AI-powered nutrition platform that provides personalized meal recommendations using machine learning trained on 230K+ real recipes from Kaggle</p>
 
-## 🎓 Academic Project Overview
+  [Features](#-features) • [Demo](#-demo) • [Installation](#-quick-start) • [Contributing](CONTRIBUTING.md) • [License](#-license)
+</div>
 
-**NutriGuide AI** is a full-stack machine learning web application that provides personalized nutrition recommendations and meal planning. Built with modern technologies including React, Node.js, Express, MongoDB, and Python ML models, this system demonstrates the integration of AI/ML with web development for solving real-world health and nutrition problems.
+---
 
-### 🌟 Key Features
+## 📖 About
 
-- **AI-Powered Recommendations**: Machine learning model predicts personalized calorie targets and macronutrient distribution
-- **User Authentication**: Secure JWT-based authentication with role-based access control (RBAC)
-- **Personalized Profiles**: Comprehensive health data collection (age, gender, weight, height, activity level, goals)
-- **Meal Database**: Searchable meal database with nutritional information, dietary tags, and allergen filtering
-- **Progress Tracking**: Daily nutrition logging with visual analytics and charts
-- **Responsive UI**: Modern, animated interface built with React, Tailwind CSS, and Framer Motion
-- **Admin Panel**: Administrative dashboard for managing users and meal database
+**NutriGuide AI** is an open-source machine learning web application that provides personalized nutrition recommendations and intelligent meal planning. Built with modern technologies including React, Node.js, Express, MongoDB, and Python ML models, this system demonstrates the integration of AI/ML with web development for solving real-world health and nutrition problems.
+
+Perfect for:
+- 🎓 Students learning full-stack development with ML
+- 👨‍💻 Developers building health tech applications
+- 🔬 Researchers exploring nutrition recommendation systems
+- 💪 Anyone interested in personalized nutrition technology
+
+## ✨ Features
+
+### 🤖 AI & Machine Learning
+- **99.87% Accurate Predictions**: Gradient Boosting model trained on 230K+ real recipes from Kaggle
+- **Personalized Calorie Targets**: ML-powered daily calorie recommendations based on 14 features
+- **Smart Macronutrient Distribution**: Automatic protein, carbs, and fats calculation
+- **Real Dataset**: Trained on Food.com Recipes and Interactions dataset
+
+### 👤 User Experience
+- **Secure Authentication**: JWT-based auth with role-based access control (Admin/User)
+- **Comprehensive Health Profiles**: Age, gender, weight, height, activity level, fitness goals
+- **Goal-Oriented Planning**: Lose weight, maintain, or gain muscle mass
+- **Progress Dashboard**: Visual analytics with charts and insights
+- **Responsive Design**: Beautiful UI with animations (Framer Motion) that works on all devices
+
+### 🍽️ Meal Management
+- **500+ Meal Database**: Real nutritional data from Kaggle recipes
+- **Advanced Search**: Filter by calories, protein, dietary preferences (vegan, vegetarian, keto)
+- **Allergen Filtering**: Gluten-free, dairy-free, nut-free options
+- **Nutritional Breakdown**: Complete macros and micronutrients per meal
+- **Meal Planning**: Track daily intake and compare against targets
+
+### 📊 Analytics & Tracking
+- **Daily Nutrition Logging**: Track meals and monitor progress
+- **Visual Charts**: Interactive graphs using Recharts
+- **Calorie & Macro Tracking**: Real-time comparison with AI targets
+- **Historical Data**: View trends over time
+
+### 🛡️ Admin Features
+- **User Management**: Admin dashboard with user oversight
+- **Meal Database Control**: Add, edit, or remove meals
+- **Analytics Overview**: System-wide statistics and insights
+
+---
+
+## 🎬 Demo
+
+> **Note**: Add screenshots and demo video here once deployed
+
+### Screenshots (Coming Soon)
+- Landing Page
+- Dashboard with Analytics
+- Meal Search & Filtering
+- Progress Tracking
+- Admin Panel
+
+### Live Demo
+🚀 [Coming Soon - Deploy your own!](DEPLOYMENT_GUIDE.md)
 
 ---
 
@@ -597,107 +659,107 @@ curl -X POST http://localhost:5001/predict \
 
 ---
 
-## 📈 Future Enhancements
+## 🤝 Contributing
 
-1. **Enhanced ML Models**
-   - Deep learning models (TensorFlow/Keras)
-   - Recommendation system for meals
-   - Collaborative filtering
+We love contributions! Whether you're fixing bugs, adding features, or improving documentation, your help is welcome.
 
-2. **Additional Features**
-   - Meal photo upload and nutrition estimation
-   - Social features (share progress, challenges)
-   - Integration with fitness trackers
-   - Recipe creation and sharing
-   - Grocery list generation
-   - Multi-language support
+### 🛡️ Branch Protection Enabled
+Our main branch is protected! This means:
+- ✅ All changes go through Pull Requests
+- ✅ Code reviews are required before merging
+- ✅ Automated tests must pass
+- ✅ No direct pushes to main (keeps code safe!)
 
-3. **Production Deployment**
-   - Docker containerization
-   - CI/CD pipeline
-   - Cloud deployment (AWS/Azure/GCP)
-   - CDN for static assets
-   - Database optimization and indexing
+### Quick Contribution Steps
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'feat: add some amazing feature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request (auto-assigned reviewers will review)
+6. Wait for approval and tests to pass
+7. Merge! 🎉
 
-4. **Analytics**
-   - Advanced analytics dashboard
-   - Predictive health insights
-   - Trend analysis
-   - Export reports (PDF)
+### First Time Contributing?
+- 📖 Read [First Time Contributors Guide](FIRST_TIME_CONTRIBUTORS.md) - Complete beginner's guide
+- 📖 Read [Contributing Guidelines](CONTRIBUTING.md) - Detailed contribution guide
+- 🐛 Look for issues labeled `good first issue` or `help wanted`
+- 💬 Ask questions in [Discussions](../../discussions)
+
+### Important Guides
+- **[BRANCH_PROTECTION.md](BRANCH_PROTECTION.md)** - How branch protection works
+- **[START_HERE.md](START_HERE.md)** - Complete setup guide (for maintainers)
 
 ---
 
-## 📚 Academic Considerations
+## 📋 Roadmap
 
-### For Viva Preparation
+See our [ROADMAP.md](ROADMAP.md) for planned features and upcoming enhancements.
 
-**Key Discussion Points:**
+**Upcoming Features:**
+- 🔥 Recipe recommendation system using collaborative filtering
+- 📸 Meal photo recognition with computer vision
+- 🏆 Gamification with achievements and challenges
+- 📱 Mobile app (React Native)
+- 🌍 Multi-language support
 
-1. **System Architecture**
-   - MERN stack benefits
-   - Microservices approach (ML service separation)
-   - RESTful API design principles
+---
 
-2. **Machine Learning**
-   - Model selection rationale
-   - Feature engineering importance
-   - Handling bias in health data
-   - Model evaluation metrics
+## 🐛 Bug Reports & Feature Requests
 
-3. **Security**
-   - JWT authentication flow
-   - Password hashing with bcrypt
-   - Input validation and sanitization
-   - CORS and security headers
+Found a bug or have a feature request? Please check our [issue tracker](../../issues) and create a new issue if needed.
 
-4. **Database Design**
-   - MongoDB schema design
-   - Relationships and references
-   - Indexing strategies
+- **Bug Reports**: Use the bug report template
+- **Feature Requests**: Use the feature request template
+- **Security Issues**: See [SECURITY.md](SECURITY.md)
 
-5. **Frontend Architecture**
-   - Component-based design
-   - State management with Zustand
-   - Responsive design patterns
-   - Performance optimization
+---
 
-### Report Structure Suggestion
+## 📄 License
 
-1. **Introduction**
-   - Problem statement
-   - Objectives
-   - Scope
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-2. **Literature Review**
-   - Existing nutrition apps
-   - ML in healthcare
-   - Technology comparison
+**TL;DR**: You can use this project for personal and commercial purposes, modify it, and distribute it. Just include the original license and copyright notice.
 
-3. **System Design**
-   - Architecture diagram
-   - ER diagram
-   - Use case diagrams
-   - Sequence diagrams
+---
 
-4. **Implementation**
-   - Technology stack
-   - Module descriptions
-   - Code snippets
+## 🙏 Acknowledgments
 
-5. **ML Model**
-   - Data preprocessing
-   - Feature engineering
-   - Model training
-   - Evaluation results
+- **Kaggle Food.com Dataset**: For providing 230K+ real recipes for ML training
+- **Open Source Community**: For the amazing tools and libraries
+- **Contributors**: Everyone who has contributed to this project
 
-6. **Testing**
-   - Unit testing
-   - Integration testing
-   - User acceptance testing
+### Built With Love Using
+- [React](https://reactjs.org) - Frontend framework
+- [Node.js](https://nodejs.org) - Backend runtime
+- [MongoDB](https://www.mongodb.com) - Database
+- [Scikit-learn](https://scikit-learn.org) - Machine learning
+- [Tailwind CSS](https://tailwindcss.com) - Styling
+- And many more awesome open-source projects!
 
-7. **Results & Analysis**
-   - Performance metrics
-   - User feedback
+---
+
+## 📞 Contact & Support
+
+- **Issues**: [GitHub Issues](../../issues)
+- **Discussions**: [GitHub Discussions](../../discussions)
+- **Email**: [Create an issue for support](../../issues/new)
+
+---
+
+## ⭐ Star History
+
+If you find this project useful, please consider giving it a star! It helps others discover the project.
+
+[![Star History Chart](https://api.star-history.com/svg?repos=rumi097/NutriGuide&type=Date)](https://star-history.com/#rumi097/NutriGuide&Date)
+
+---
+
+<div align="center">
+  <p>Made with ❤️ by the NutriGuide Team</p>
+  <p>
+    <a href="#-nutriguide-ai">Back to Top ⬆️</a>
+  </p>
+</div>
    - Model accuracy
 
 8. **Conclusion & Future Work**

@@ -1,0 +1,209 @@
+# Code Owners - Automatic Review Assignment
+
+# This file defines who reviews and approves code changes in different parts of the repository.
+# When a pull request is created, GitHub automatically assigns reviewers based on these rules.
+
+# INSTRUCTIONS:
+# 1. Replace @rumi097 with your actual GitHub username
+# 2. Add team members as you grow: @username1 @username2
+# 3. Create GitHub teams for larger projects: @org/team-name
+
+# ==============================================================================
+# GLOBAL OWNERS
+# ==============================================================================
+# These users are the default owners for everything in the repository
+# unless a later match takes precedence.
+
+* @rumi097
+
+# ==============================================================================
+# BACKEND CODE
+# ==============================================================================
+# All backend code requires review from backend maintainers
+
+/backend/ @rumi097
+/backend/**/*.js @rumi097
+/backend/package.json @rumi097
+/backend/package-lock.json @rumi097
+
+# Backend controllers - critical business logic
+/backend/controllers/ @rumi097
+
+# Backend models - database schemas
+/backend/models/ @rumi097
+
+# Backend routes - API endpoints
+/backend/routes/ @rumi097
+
+# Backend middleware - auth, validation, error handling
+/backend/middleware/ @rumi097
+
+# ==============================================================================
+# FRONTEND CODE
+# ==============================================================================
+# All frontend code requires review from frontend maintainers
+
+/frontend/ @rumi097
+/frontend/**/*.jsx @rumi097
+/frontend/**/*.js @rumi097
+/frontend/**/*.css @rumi097
+/frontend/package.json @rumi097
+/frontend/package-lock.json @rumi097
+
+# Frontend components
+/frontend/src/components/ @rumi097
+
+# Frontend pages
+/frontend/src/pages/ @rumi097
+
+# Frontend services - API calls
+/frontend/src/services/ @rumi097
+
+# Frontend store - state management
+/frontend/src/store/ @rumi097
+
+# ==============================================================================
+# ML SERVICE
+# ==============================================================================
+# Machine learning code requires review from ML team
+
+/ml-service/ @rumi097
+/ml-service/**/*.py @rumi097
+/ml-service/requirements.txt @rumi097
+
+# ML models - trained models and stats
+/ml-service/models/ @rumi097
+
+# Training scripts - model training
+/ml-service/train*.py @rumi097
+
+# Flask app - ML API
+/ml-service/app.py @rumi097
+
+# ==============================================================================
+# DATASETS
+# ==============================================================================
+# Dataset changes need review to ensure data integrity
+
+/datasets/ @rumi097
+/datasets/**/*.csv @rumi097
+
+# ==============================================================================
+# DOCUMENTATION
+# ==============================================================================
+# Documentation changes - ensure accuracy and clarity
+
+*.md @rumi097
+/docs/ @rumi097
+
+# Critical documentation that needs extra review
+README.md @rumi097
+CONTRIBUTING.md @rumi097
+CODE_OF_CONDUCT.md @rumi097
+SECURITY.md @rumi097
+
+# ==============================================================================
+# CONFIGURATION FILES
+# ==============================================================================
+# Configuration changes need careful review
+
+# Package dependencies
+package.json @rumi097
+package-lock.json @rumi097
+requirements.txt @rumi097
+
+# Build and bundler configs
+*.config.js @rumi097
+*.config.cjs @rumi097
+tsconfig.json @rumi097
+vite.config.js @rumi097
+tailwind.config.js @rumi097
+
+# Environment files (templates only, never commit real .env)
+.env.example @rumi097
+
+# ==============================================================================
+# GITHUB WORKFLOWS & SETTINGS
+# ==============================================================================
+# CI/CD and GitHub configuration - critical for automation
+
+.github/ @rumi097
+.github/**/*.yml @rumi097
+.github/**/*.yaml @rumi097
+
+# GitHub Actions workflows
+.github/workflows/ @rumi097
+
+# Issue and PR templates
+.github/ISSUE_TEMPLATE/ @rumi097
+.github/pull_request_template.md @rumi097
+
+# ==============================================================================
+# SECURITY-SENSITIVE FILES
+# ==============================================================================
+# Extra scrutiny needed for security-related files
+
+SECURITY.md @rumi097
+.github/workflows/security.yml @rumi097
+
+# ==============================================================================
+# DATABASE & SEEDS
+# ==============================================================================
+# Database changes need review to prevent data issues
+
+/backend/seeds/ @rumi097
+/backend/models/ @rumi097
+
+# ==============================================================================
+# DEPLOYMENT FILES
+# ==============================================================================
+# Deployment configurations affect production
+
+render.yaml @rumi097
+vercel.json @rumi097
+Dockerfile @rumi097
+docker-compose.yml @rumi097
+
+# ==============================================================================
+# GIT CONFIGURATION
+# ==============================================================================
+
+.gitignore @rumi097
+.gitattributes @rumi097
+
+# ==============================================================================
+# EXAMPLES FOR FUTURE USE
+# ==============================================================================
+# Uncomment and modify these when you have team members:
+
+# Frontend team
+# /frontend/ @rumi097 @frontend-dev-1 @frontend-dev-2
+
+# Backend team  
+# /backend/ @rumi097 @backend-dev-1 @backend-dev-2
+
+# ML team
+# /ml-service/ @rumi097 @ml-engineer-1 @data-scientist-1
+
+# Documentation team
+# *.md @rumi097 @tech-writer-1
+
+# DevOps team
+# .github/workflows/ @rumi097 @devops-engineer-1
+
+# Using GitHub Teams (for organizations)
+# /backend/ @your-org/backend-team
+# /frontend/ @your-org/frontend-team
+# /ml-service/ @your-org/ml-team
+
+# ==============================================================================
+# NOTES
+# ==============================================================================
+# 
+# - Code owners are automatically requested for review when a PR changes their files
+# - At least one code owner must approve before a PR can be merged (if enabled in branch protection)
+# - The last matching pattern has precedence
+# - Use teams for larger projects: @org/team-name
+# - Regular contributors can be added as they earn trust
+# 
+# Learn more: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners

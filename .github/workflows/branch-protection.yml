@@ -1,0 +1,206 @@
+name: Branch Protection Check
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+    types: [opened, synchronize, reopened]
+
+jobs:
+  # Prevent commits directly to protected branches
+  check-branch:
+    name: Check Branch Rules
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Check if PR is from fork
+        id: check-fork
+        run: |
+          if [ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ]; then
+            echo "is_fork=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_fork=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Validate branch name
+        run: |
+          BRANCH_NAME="${{ github.head_ref }}"
+          echo "Branch name: $BRANCH_NAME"
+          
+          # Check if branch follows naming convention
+          if [[ ! "$BRANCH_NAME" =~ ^(feature|fix|docs|refactor|test|chore)/ ]]; then
+            echo "::warning::Branch name should follow convention: feature/, fix/, docs/, refactor/, test/, or chore/"
+          fi
+      
+      - name: Check for main branch commits
+        run: |
+          # Ensure PR is not trying to merge main into main
+          BASE_BRANCH="${{ github.base_ref }}"
+          HEAD_BRANCH="${{ github.head_ref }}"
+          
+          if [ "$HEAD_BRANCH" = "main" ]; then
+            echo "::error::Cannot create PR from main branch"
+            exit 1
+          fi
+
+  # Require PR description
+  check-pr-description:
+    name: Check PR Description
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check PR body
+        run: |
+          PR_BODY="${{ github.event.pull_request.body }}"
+          
+          if [ -z "$PR_BODY" ] || [ ${#PR_BODY} -lt 20 ]; then
+            echo "::error::PR description is too short. Please provide a detailed description."
+            exit 1
+          fi
+          
+          echo "✅ PR description looks good"
+
+  # Check for conflicts
+  check-conflicts:
+    name: Check for Merge Conflicts
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Check for conflicts with base branch
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          
+          # Try to merge base into current branch
+          if ! git merge --no-commit --no-ff origin/${{ github.base_ref }}; then
+            echo "::error::This PR has merge conflicts with ${{ github.base_ref }}. Please resolve them."
+            git merge --abort
+            exit 1
+          fi
+          
+          git merge --abort
+          echo "✅ No merge conflicts detected"
+
+  # Check file changes
+  check-changes:
+    name: Check File Changes
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Get changed files
+        id: changed-files
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          echo "$CHANGED_FILES"
+          
+          # Check for sensitive files
+          if echo "$CHANGED_FILES" | grep -qE '(\.env$|\.env\..*|\.pem$|\.key$)'; then
+            echo "::error::PR contains sensitive files (.env, .pem, .key). Please remove them."
+            exit 1
+          fi
+          
+          # Check for large files
+          LARGE_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | \
+            xargs -I {} sh -c 'if [ -f "{}" ] && [ $(stat -f%z "{}") -gt 1048576 ]; then echo "{}"; fi')
+          
+          if [ ! -z "$LARGE_FILES" ]; then
+            echo "::warning::PR contains large files (>1MB):"
+            echo "$LARGE_FILES"
+          fi
+          
+          echo "✅ File changes look good"
+
+  # Require tests for code changes
+  check-tests:
+    name: Check Test Coverage
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Check if tests are included
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          
+          # Check if code files changed
+          CODE_CHANGED=$(echo "$CHANGED_FILES" | grep -E '\.(js|jsx|py)$' | grep -v test | wc -l)
+          
+          # Check if test files changed
+          TEST_CHANGED=$(echo "$CHANGED_FILES" | grep -E '(test|spec)\.(js|jsx|py)$' | wc -l)
+          
+          if [ $CODE_CHANGED -gt 0 ] && [ $TEST_CHANGED -eq 0 ]; then
+            echo "::warning::Code changes detected but no test files were modified. Consider adding tests."
+          else
+            echo "✅ Test coverage check passed"
+          fi
+
+  # Check commit messages
+  check-commits:
+    name: Check Commit Messages
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Validate commit messages
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          
+          # Get commit messages
+          COMMITS=$(git log --format=%s origin/${{ github.base_ref }}..HEAD)
+          
+          echo "Checking commit messages..."
+          echo "$COMMITS"
+          
+          # Check for conventional commits
+          INVALID=0
+          while IFS= read -r commit; do
+            if [[ ! "$commit" =~ ^(feat|fix|docs|style|refactor|perf|test|chore)(\(.+\))?: ]]; then
+              echo "::warning::Commit message doesn't follow conventional commits: $commit"
+              INVALID=$((INVALID+1))
+            fi
+          done <<< "$COMMITS"
+          
+          if [ $INVALID -gt 0 ]; then
+            echo "::warning::$INVALID commit(s) don't follow conventional commit format"
+            echo "Consider using: feat:, fix:, docs:, style:, refactor:, perf:, test:, or chore:"
+          else
+            echo "✅ All commits follow conventional format"
+          fi
+
+  # Summary check
+  protection-summary:
+    name: Branch Protection Summary
+    runs-on: ubuntu-latest
+    needs: [check-branch, check-pr-description, check-conflicts, check-changes, check-tests, check-commits]
+    
+    steps:
+      - name: Summary
+        run: |
+          echo "### ✅ Branch Protection Checks Passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All automated branch protection checks have passed." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Next Steps:**" >> $GITHUB_STEP_SUMMARY
+          echo "1. Code review from maintainers" >> $GITHUB_STEP_SUMMARY
+          echo "2. All CI tests must pass" >> $GITHUB_STEP_SUMMARY
+          echo "3. All conversations must be resolved" >> $GITHUB_STEP_SUMMARY
+          echo "4. Required approvals must be obtained" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Thank you for your contribution! 🎉" >> $GITHUB_STEP_SUMMARY

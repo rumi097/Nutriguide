@@ -1,0 +1,144 @@
+name: Auto Label PRs
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Auto-label based on branch name
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const branch = context.payload.pull_request.head.ref;
+            const labels = [];
+            
+            // Label based on branch prefix
+            if (branch.startsWith('feature/')) {
+              labels.push('enhancement');
+            } else if (branch.startsWith('fix/')) {
+              labels.push('bug');
+            } else if (branch.startsWith('docs/')) {
+              labels.push('documentation');
+            } else if (branch.startsWith('refactor/')) {
+              labels.push('refactor');
+            } else if (branch.startsWith('test/')) {
+              labels.push('test');
+            } else if (branch.startsWith('chore/')) {
+              labels.push('chore');
+            }
+            
+            if (labels.length > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                labels: labels
+              });
+            }
+      
+      - name: Auto-label based on files changed
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+            
+            const labels = new Set();
+            
+            for (const file of files) {
+              // Backend changes
+              if (file.filename.startsWith('backend/')) {
+                labels.add('backend');
+              }
+              
+              // Frontend changes
+              if (file.filename.startsWith('frontend/')) {
+                labels.add('frontend');
+              }
+              
+              // ML service changes
+              if (file.filename.startsWith('ml-service/')) {
+                labels.add('ml-service');
+              }
+              
+              // Documentation changes
+              if (file.filename.endsWith('.md')) {
+                labels.add('documentation');
+              }
+              
+              // Configuration changes
+              if (file.filename.match(/\.(json|yml|yaml|config\.(js|ts))$/)) {
+                labels.add('configuration');
+              }
+              
+              // GitHub workflows
+              if (file.filename.startsWith('.github/workflows/')) {
+                labels.add('ci/cd');
+              }
+              
+              // Dependencies
+              if (file.filename.match(/(package\.json|requirements\.txt)/)) {
+                labels.add('dependencies');
+              }
+            }
+            
+            if (labels.size > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                labels: Array.from(labels)
+              });
+            }
+      
+      - name: Add size label
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+            
+            let additions = 0;
+            let deletions = 0;
+            
+            for (const file of files) {
+              additions += file.additions;
+              deletions += file.deletions;
+            }
+            
+            const totalChanges = additions + deletions;
+            let sizeLabel = '';
+            
+            if (totalChanges < 10) {
+              sizeLabel = 'size/XS';
+            } else if (totalChanges < 50) {
+              sizeLabel = 'size/S';
+            } else if (totalChanges < 200) {
+              sizeLabel = 'size/M';
+            } else if (totalChanges < 500) {
+              sizeLabel = 'size/L';
+            } else {
+              sizeLabel = 'size/XL';
+            }
+            
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              labels: [sizeLabel]
+            });
