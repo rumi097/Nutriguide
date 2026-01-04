@@ -704,6 +704,25 @@ curl -X POST http://localhost:5001/predict \
 
 ---
 
+## 🌐 Deployment
+
+### Recommended Stack (Free & Easy)
+
+- **Frontend**: Vercel (free unlimited hosting, auto-deploy)
+- **Backend**: Render Web Service (free tier available)
+- **Database**: MongoDB Atlas (free M0 cluster)
+- **ML Service**: Not required (app uses formula fallback)
+
+📖 **Complete Guide**: See [DEPLOYMENT_VERCEL_RENDER.md](DEPLOYMENT_VERCEL_RENDER.md) for step-by-step deployment instructions.
+
+⏱️ **Deploy Time**: ~15 minutes total
+
+**Alternative Options**:
+- Render Blueprint (all services): [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
+- Custom setup: Deploy backend anywhere that runs Node.js
+
+---
+
 ## 👥 Contributing
 
 This is an academic project. For educational purposes, feel free to:
