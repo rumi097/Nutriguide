@@ -14,6 +14,7 @@ import {
   BarChart3
 } from 'lucide-react'
 import toast from 'react-hot-toast'
+import api from '../utils/api'
 
 const AnalyticsPage = () => {
   const [weeklySummary, setWeeklySummary] = useState(null)
@@ -39,23 +40,12 @@ const AnalyticsPage = () => {
   const fetchAnalytics = async () => {
     try {
       setIsLoading(true)
-      const token = localStorage.getItem('token')
       
-      const [summaryRes, weightRes, historyRes] = await Promise.all([
-        fetch('http://localhost:5002/api/progress/weekly-summary', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        }),
-        fetch(`http://localhost:5002/api/progress/weight-history?days=${timeRange}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        }),
-        fetch(`http://localhost:5002/api/progress/history?days=90`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
+      const [summaryData, weightData, historyData] = await Promise.all([
+        api.get('/progress/weekly-summary').then(res => res.data),
+        api.get(`/progress/weight-history?days=${timeRange}`).then(res => res.data),
+        api.get(`/progress/history?days=90`).then(res => res.data)
       ])
-      
-      const summaryData = await summaryRes.json()
-      const weightData = await weightRes.json()
-      const historyData = await historyRes.json()
       
       if (summaryData.success) setWeeklySummary(summaryData.data)
       if (weightData.success) setWeightHistory(weightData.data.history)
@@ -79,14 +69,9 @@ const AnalyticsPage = () => {
   
   const fetchDayProgress = async (date) => {
     try {
-      const token = localStorage.getItem('token')
       const dateStr = date.toISOString().split('T')[0]
       
-      const res = await fetch(`http://localhost:5002/api/progress/history?startDate=${dateStr}&endDate=${dateStr}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      })
-      
-      const data = await res.json()
+      const { data } = await api.get(`/progress/history?startDate=${dateStr}&endDate=${dateStr}`)
       if (data.success && data.data.history.length > 0) {
         setDayProgress(data.data.history[0])
         toast.success(`📅 Loaded data for ${date.toLocaleDateString()}`)
