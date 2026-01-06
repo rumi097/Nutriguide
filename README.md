@@ -74,7 +74,7 @@ Perfect for:
 - Admin Panel
 
 ### Live Demo
-🚀 [Coming Soon - Deploy your own!](DEPLOYMENT_GUIDE.md)
+🚀 [https://nutriguide-five.vercel.app](DEPLOYMENT_GUIDE.md)
 
 ---
 
